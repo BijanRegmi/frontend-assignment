@@ -5,6 +5,7 @@ import { notFound } from "next/navigation"
 export const revalidate = 3600
 
 export default async function Home() {
+    return <></>
     const response = await chartsTrack({})
 
     if (!response) return notFound()

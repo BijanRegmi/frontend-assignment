@@ -1,6 +1,6 @@
 import { formatString } from "@/lib/utils"
 import Image from "next/image"
-import { ITrack } from ".."
+import { ITrack } from "@/types/chartTrack"
 
 export const TrackCard = ({ track }: { track: ITrack }) => {
     return (
@@ -10,7 +10,10 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
                 id="image"
             >
                 <Image
-                    src={track.images.background}
+                    src={
+                        track.images?.background ||
+                        "https://discussions.apple.com/content/attachment/592590040"
+                    }
                     alt={track.title}
                     fill
                     className="w-full aspect-square rounded-md"
@@ -23,14 +26,18 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
                 >
                     {track.title}
                 </h1>
-                <h2
-                    className="text-shade-100 truncate w-full"
-                    title={track.artists
-                        .map(a => formatString(a.alias))
-                        .join(", ")}
-                >
-                    {track.artists.map(a => formatString(a.alias)).join(", ")}
-                </h2>
+                {track.artists != undefined && (
+                    <h2
+                        className="text-shade-100 truncate w-full"
+                        title={track.artists
+                            .map(a => formatString(a.alias))
+                            .join(", ")}
+                    >
+                        {track.artists
+                            .map(a => formatString(a.alias))
+                            .join(", ")}
+                    </h2>
+                )}
             </div>
         </div>
     )
