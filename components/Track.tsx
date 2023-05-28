@@ -26,18 +26,21 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
                 >
                     {track.title}
                 </h1>
-                {track.artists != undefined && (
-                    <h2
-                        className="text-shade-100 truncate w-full"
-                        title={track.artists
-                            .map(a => formatString(a.alias))
-                            .join(", ")}
-                    >
-                        {track.artists
-                            .map(a => formatString(a.alias))
-                            .join(", ")}
-                    </h2>
-                )}
+                {track.artists != undefined &&
+                    (() => {
+                        const arts = track.artists.filter(
+                            a => a.alias != undefined
+                        )
+                        const str = arts.map(a => a.alias).join(", ")
+                        return (
+                            <h2
+                                className="text-shade-100 truncate w-full"
+                                title={str}
+                            >
+                                {str}
+                            </h2>
+                        )
+                    })()}
             </div>
         </div>
     )
