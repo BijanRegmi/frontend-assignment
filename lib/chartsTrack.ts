@@ -29,7 +29,7 @@ export const chartsTrack = async ({
         const response: { properties: {}; tracks: ITrack[] } = await fetch(
             url,
             {
-                next: { revalidate: 60 * 60 },
+                next: { revalidate: 36000 },
                 method: "GET",
                 headers,
             }

@@ -1,13 +1,12 @@
 import Link from "next/link"
-import { AiOutlineSearch } from "react-icons/ai"
-import { MdOutlineEvent } from "react-icons/md"
+import { AiOutlineSearch, AiOutlineHome } from "react-icons/ai"
 import { FiRadio } from "react-icons/fi"
 import { BiTrendingUp } from "react-icons/bi"
 import { SlEvent } from "react-icons/sl"
 
 export const Sidebar = () => {
     const links = [
-        { title: "Home", icon: MdOutlineEvent, href: "" },
+        { title: "Home", icon: AiOutlineHome, href: "" },
         { title: "Browse", icon: AiOutlineSearch, href: "" },
         { title: "Radio", icon: FiRadio, href: "" },
         { title: "Trending", icon: BiTrendingUp, href: "" },
@@ -15,7 +14,7 @@ export const Sidebar = () => {
     ]
 
     return (
-        <div className="w-52 h-full overflow-scroll">
+        <div className="w-52 h-full overflow-scroll border-r border-shade-300">
             <ul className="flex flex-col justify-around gap-4 bg-shade-0 text-shade-900 rounded-md py-8">
                 {links.map((link, idx) => (
                     <li

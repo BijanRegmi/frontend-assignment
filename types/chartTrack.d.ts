@@ -10,12 +10,12 @@ export interface ITrack {
     title: string
     subtitle: string
     images?: IImages
-    artists?: IArtist[]
+    artists?: TrackArtist[]
     url: string
 }
 
-export interface IArtist {
-    alias: string
+export interface TrackArtist {
+    alias?: string
     id: string
     adamid: string
 }

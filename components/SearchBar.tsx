@@ -52,18 +52,19 @@ export const SearchBar = () => {
                     setOpen(o => !o)
                 }}
                 className={classNames(
-                    "h-8 w-8 border p-1 border-shade-300 cursor-pointer",
+                    "h-8 w-8 border p-1 border-shade-300 cursor-pointer shadow-md",
                     { "rounded-l-md": open, "rounded-md": !open }
                 )}
             />
             <div className="relative h-8">
                 <input
                     className={classNames(
-                        "w-0 h-full border-shade-300 rounded-tr-md transition-all outline-none px-2",
+                        "w-0 h-full border-shade-300 rounded-tr-md transition-all outline-none shadow-md",
                         {
+                            "px-2": open,
                             "w-64": open,
                             "border-l-0 border": open,
-                            "rounded-br-md": data?.hints.length == 0,
+                            "rounded-br-md": !data || data.hints.length == 0,
                         }
                     )}
                     required
@@ -72,7 +73,7 @@ export const SearchBar = () => {
                     type="text"
                 />
                 {(isLoading || (data && data.hints.length > 0 && open)) && (
-                    <div className="absolute top-full left-0 right-0 rounded-b-md max-h-64 border border-shade-300 border-t-0 overflow-scroll bg-white px-2">
+                    <div className="absolute top-full left-0 right-0 rounded-b-md max-h-64 border border-shade-300 border-t-0 overflow-scroll bg-white px-2 z-50 shadow-sm">
                         {isLoading && (
                             <div className="truncate border-b border-shade-200 py-2 cursor-pointer hover:border-shade-700">
                                 Loading...

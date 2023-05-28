@@ -1,20 +1,17 @@
-import { TrackCard } from "@/components/Track"
-import { chartsTrack } from "@/lib/chartsTrack"
+import { ChartFilter } from "@/components/ChartFilter"
+import { chartList } from "@/lib/chartsList"
 import { notFound } from "next/navigation"
 
-export const revalidate = 3600
+export const revalidate = 14000
 
 export default async function Home() {
-    return <></>
-    const response = await chartsTrack({})
+    const response = await chartList()
 
     if (!response) return notFound()
 
     return (
-        <div className="flex gap-4 flex-wrap ">
-            {response.tracks.map(t => (
-                <TrackCard key={t.key} track={t} />
-            ))}
+        <div className="h-full w-full p-4">
+            <ChartFilter chartList={response} />
         </div>
     )
 }

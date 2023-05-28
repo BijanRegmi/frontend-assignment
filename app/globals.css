@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 body {
-    @apply w-screen h-screen overflow-scroll bg-shade-100;
+    @apply w-screen h-screen overflow-scroll bg-white;
 }
 
 :root {

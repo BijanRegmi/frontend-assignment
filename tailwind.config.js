@@ -9,6 +9,7 @@ module.exports = {
         extend: {
             colors: {
                 shade: {
+                    0: "#ffffff",
                     100: "#f1f1f1",
                     200: "#d4d4d4",
                     300: "#b8b8b8",
@@ -18,6 +19,13 @@ module.exports = {
                     700: "#474747",
                     800: "#2a2a2a",
                     900: "#0e0e0e",
+                },
+                primary: {
+                    100: "#fc8964",
+                    200: "#e37b5a",
+                    300: "#ca6e50",
+                    400: "#b06046",
+                    500: "#97523c",
                 },
             },
             backgroundImage: {
