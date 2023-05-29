@@ -81,6 +81,7 @@ export const SearchBar = () => {
                         )}
                         {data?.hints.map((a, idx) => (
                             <Link
+                                prefetch={false}
                                 href={`/search?${new URLSearchParams({
                                     q: a.term,
                                 }).toString()}`}

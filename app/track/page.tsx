@@ -1,7 +1,8 @@
 import { AlbumCard } from "@/components/AlbumCard"
 import { SongCard } from "@/components/SongCard"
-import { getArtistSummary } from "@/lib/getArtistSummary"
-import { getTrackDetails } from "@/lib/getTrackDetails"
+import { API } from "@/lib/Api"
+import { ArtistSummary } from "@/types/ArtistSummary"
+import { TrackDetails } from "@/types/TrackDetails"
 import { notFound, redirect } from "next/navigation"
 import { AiOutlinePlayCircle } from "react-icons/ai"
 
@@ -12,16 +13,21 @@ const TrackPage = async ({
 }) => {
     if (!searchParams.id) redirect("/")
 
-    const track = await getTrackDetails({ key: searchParams.id })
+    const track = await API<TrackDetails>({
+        endpoint: "/songs/get-details",
+        demo: true,
+        filepath: "responses/trackDetails.json",
+        params: { key: searchParams.id },
+    })
     if (!track) return notFound()
 
-    const summary = await getArtistSummary({
-        id: track.artists.pop()?.adamid as string,
-    })
+    const summary = await API<{ resources: ArtistSummary }>({
+        endpoint: "/artists/get-summary",
+        demo: true,
+        params: { id: track.artists.pop()?.adamid as string },
+        filepath: "responses/artistSummary.json",
+    }).then(res => res?.resources)
     if (!summary) return notFound()
-
-    const artist =
-        summary.artists[Object.keys(summary.artists)[0]].attributes.name
 
     const lyrics = track.sections.find(s => s.type == "LYRICS")
 

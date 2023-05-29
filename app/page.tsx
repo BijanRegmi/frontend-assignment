@@ -1,13 +1,18 @@
 import { ChartFilter } from "@/components/ChartFilter"
 import { Charts } from "@/components/Charts"
-import { chartList } from "@/lib/chartsList"
+import { API } from "@/lib/Api"
+import { ChartList } from "@/types/chartList"
 import { notFound } from "next/navigation"
 
 export const revalidate = 14000
 
 export default async function Home() {
-    const response = await chartList()
-
+    const response = await API<ChartList>({
+        endpoint: "/charts/list",
+        demo: true,
+        revalidate: 14000,
+        filepath: "responses/charts_list.json",
+    })
     if (!response) return notFound()
 
     return (

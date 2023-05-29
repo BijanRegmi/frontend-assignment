@@ -20,10 +20,18 @@ export const SearchResult = ({
         fetchNextPage,
         isFetchingNextPage,
         isFetching,
-    } = trpc.getSearchResults.useInfiniteQuery({
-        term,
-        prefetched: tracks.length,
-    })
+    } = trpc.getSearchResults.useInfiniteQuery(
+        {
+            term,
+            prefetched: tracks.length,
+        },
+        {
+            getNextPageParam: lastPage => lastPage.nextCursor,
+            refetchOnReconnect: false,
+            refetchOnMount: false,
+            refetchOnWindowFocus: false,
+        }
+    )
 
     const observerRef = useObserverRef<HTMLDivElement>({
         onIntersect: () => {
@@ -50,7 +58,7 @@ export const SearchResult = ({
             <div ref={observerRef} className="w-full text-center">
                 {(isFetchingNextPage && hasNextPage) || isFetching
                     ? "Loading..."
-                    : "Thats all we have :)"}
+                    : "That's all we have :)"}
             </div>
         </>
     )

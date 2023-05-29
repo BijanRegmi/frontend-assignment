@@ -1,43 +1,21 @@
-import { searchAutoComplete } from "@/lib/searchAutoComplete"
 import { publicProcedure, router } from "../trpc"
 import { z } from "zod"
-import { TRPCError } from "@trpc/server"
-import { ISearchResponse } from "@/types/searchResponse"
-import { getChartTracks } from "@/lib/chartsTrack"
+import { ISearchResponse, ISearchResultResponse } from "@/types/searchResponse"
 import { ITrack } from "@/types/chartTrack"
-import { getSearchResults } from "@/lib/searchTrack"
+import { API } from "@/lib/Api"
 
 export const appRouter = router({
     autocomplete: publicProcedure
         .input(z.object({ term: z.string() }))
         .mutation(async ({ input }) => {
-            const { term } = input
+            const response = await API<ISearchResponse>({
+                endpoint: "/auto-complete",
+                demo: true,
+                filepath: "responses/autoComplete.json",
+                params: { term: input.term },
+            })
 
-            if (true) {
-                const sample: ISearchResponse = {
-                    hints: [
-                        { term: "kiss the girl" },
-                        { term: "kiss the girl brent morgan" },
-                        { term: "kiss the rain" },
-                        { term: "kiss the sky" },
-                        { term: "kiss the girl wedding" },
-                        { term: "kiss the bride" },
-                        { term: "kiss the ring" },
-                        { term: "kiss the sky presented by paul hardcastle" },
-                        { term: "kiss the anus of a black cat" },
-                        { term: "kiss the tiger" },
-                    ],
-                }
-                return sample
-            } else {
-                const response = await searchAutoComplete({ term })
-
-                if (!response)
-                    throw new TRPCError({
-                        code: "INTERNAL_SERVER_ERROR",
-                    })
-                return response
-            }
+            return response
         }),
 
     getTracks: publicProcedure
@@ -47,29 +25,33 @@ export const appRouter = router({
                 cursor: z.number().nullish(),
             })
         )
-        .query(
-            async ({
-                input,
-            }): Promise<{
-                tracks: ITrack[]
-                nextCursor: number | undefined
-            }> => {
-                const LIMIT = 20
+        .query(async ({ input }) => {
+            const LIMIT = 20
 
-                const tracks = await getChartTracks({
-                    listId: input.listId,
-                    pageSize: LIMIT,
-                    startFrom: input.cursor || 0,
-                })
-
-                const nextCursor =
-                    tracks.length < LIMIT
-                        ? undefined
-                        : tracks.length + (input.cursor || 0)
-
-                return { tracks, nextCursor }
+            const params: { [key: string]: string } = {
+                pageSize: LIMIT.toString(),
+                startFrom: (input.cursor || 0).toString(),
             }
-        ),
+
+            if (input.listId) params["listId"] = input.listId
+
+            const response = await API<{
+                properties: {}
+                tracks: ITrack[]
+            }>({
+                endpoint: "/charts/track",
+                params,
+                demo: true,
+                filepath: "responses/charts_track.json",
+            })
+
+            const nextCursor =
+                (response?.tracks.length || 0) < LIMIT
+                    ? undefined
+                    : (response?.tracks.length || 0) + (input.cursor || 0)
+
+            return { tracks: response?.tracks, nextCursor }
+        }),
 
     getSearchResults: publicProcedure
         .input(
@@ -82,16 +64,21 @@ export const appRouter = router({
         .query(async ({ input }) => {
             const LIMIT = 20
 
-            const tracks = await getSearchResults({
-                term: input.term,
-                limit: LIMIT,
-                offset: (input.cursor || 0) + input.prefetched,
-            })
+            const tracks = await API<ISearchResultResponse>({
+                endpoint: "/search",
+                demo: true,
+                filepath: "responses/search.json",
+                params: {
+                    term: input.term,
+                    limit: LIMIT.toString(),
+                    offset: ((input.cursor || 0) + input.prefetched).toString(),
+                },
+            }).then(res => res?.tracks.hits.map(h => h.track))
 
             const nextCursor =
-                tracks.length < LIMIT
+                (tracks?.length || 0) < LIMIT
                     ? undefined
-                    : tracks.length + (input.cursor || 0)
+                    : (tracks?.length || 0) + (input.cursor || 0)
 
             return { tracks, nextCursor }
         }),

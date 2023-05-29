@@ -16,6 +16,7 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
 
     return (
         <Link
+            prefetch={false}
             href={`/track?${new URLSearchParams({ id: track.key }).toString()}`}
             className="p-4  border border-orange-400 rounded-md shadow-lg w-48 aspect-square cursor-pointer hover:scale-[1.02] hover:shadow-lg"
         >

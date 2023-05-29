@@ -32,7 +32,12 @@ export const Charts = ({ chartList }: { chartList: ChartList }) => {
         isFetching,
     } = trpc.getTracks.useInfiniteQuery(
         { listId: id },
-        { getNextPageParam: lastPage => lastPage.nextCursor }
+        {
+            getNextPageParam: lastPage => lastPage.nextCursor,
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,
+            refetchOnReconnect: false,
+        }
     )
 
     const observerRef = useObserverRef<HTMLDivElement>({
@@ -56,7 +61,7 @@ export const Charts = ({ chartList }: { chartList: ChartList }) => {
             <div ref={observerRef} className="w-full text-center">
                 {(isFetchingNextPage && hasNextPage) || isFetching
                     ? "Loading..."
-                    : "Thats all we have :)"}
+                    : "That's all we have :)"}
             </div>
         </>
     )
