@@ -5,6 +5,7 @@ import { ChangeEvent } from "react"
 import { AiOutlinePlayCircle, AiOutlineCaretDown } from "react-icons/ai"
 import { useRecoilState } from "recoil"
 import { chartFilterState } from "./state"
+import useOnClickOutside from "@/lib/useClikOutside"
 
 export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
     const [state, setState] = useRecoilState(chartFilterState)
@@ -14,32 +15,46 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
     const setSearchCity = (e: ChangeEvent<HTMLInputElement>) =>
         setState(o => ({ ...o, searchCity: e.target.value }))
 
+    const toggleCountryDropDown = () =>
+        setState(o => ({ ...o, countryDropDown: !o.countryDropDown }))
+    const toggleGenreDropDown = () =>
+        setState(o => ({ ...o, genreDropDown: !o.genreDropDown }))
+    const toggleCityDropDown = () =>
+        setState(o => ({ ...o, cityDropDown: !o.cityDropDown }))
+
+    const countryRef = useOnClickOutside<HTMLDivElement>({
+        handler: () => setState(o => ({ ...o, countryDropDown: false })),
+    })
+    const cityRef = useOnClickOutside<HTMLDivElement>({
+        handler: () => setState(o => ({ ...o, cityDropDown: false })),
+    })
+    const genreRef = useOnClickOutside<HTMLDivElement>({
+        handler: () => setState(o => ({ ...o, genreDropDown: false })),
+    })
+
+    const switchToTop = () =>
+        setState(o => ({ ...o, cityIdx: -1, genreIdx: -1 }))
+
     return (
         <div className="flex flex-col bg-orange-100 rounded-lg pt-8 gap-6 chartfilter">
             <div
                 className={classNames(
-                    "px-4 w-48 border-orange-200 shadow-orange-700 bg-orange-400 text-white border-l-0 border shadow-md rounded-r-lg py-4 flex justify-between items-center relative",
+                    "px-4 w-48 border-orange-300 shadow-orange-700 bg-orange-400 text-white border-l-0 border-2 shadow-md rounded-r-lg py-4 flex justify-between items-center relative cursor-pointer hover:border-orange-300",
                     { "rounded-br-none": state.countryDropDown }
                 )}
+                onClick={toggleCountryDropDown}
             >
-                <span className="font-mono font-semibold cursor-default truncate">
+                <span className="font-mono font-semibold truncate">
                     {state.global
                         ? "GLOBAL"
                         : chartList.countries[state.countryIdx]?.name}
                 </span>
-                <AiOutlineCaretDown
-                    className="w-6 h-6 rounded-md hover:text-orange-400 hover:bg-white cursor-pointer"
-                    onClick={e => {
-                        e.stopPropagation()
-                        e.preventDefault()
-                        setState(o => ({
-                            ...o,
-                            countryDropDown: !o.countryDropDown,
-                        }))
-                    }}
-                />
+                <AiOutlineCaretDown className="w-6 h-6 rounded-md hover:text-orange-400 hover:bg-white" />
                 {state.countryDropDown && (
-                    <div className="px-4 w-49 border-shade-500 border-l-0 border shadow-md py-4 top-full left-0 right-0 text-orange-500 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll">
+                    <div
+                        className="px-4 w-49 border-shade-500 border-l-0 border shadow-md py-4 top-full left-0 right-0 text-orange-500 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-50"
+                        ref={countryRef}
+                    >
                         <input
                             autoFocus
                             className="w-full h-full border-b border-shade-300 bg-transparent rounded-sm outline-none mb-1"
@@ -81,7 +96,6 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                                                 countryIdx: idx,
                                                 cityIdx: -1,
                                                 genreIdx: -1,
-                                                countryDropDown: false,
                                                 searchCountry: "",
                                             }))
                                         }
@@ -126,18 +140,21 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
 
             <div className="w-full rounded-b-lg flex flex-row items-end pl-20 gap-10">
                 <div
-                    onClick={() => {
-                        setState(o => ({ ...o, cityIdx: -1, genreIdx: -1 }))
-                    }}
+                    onClick={switchToTop}
                     className={classNames(
-                        "px-4 py-2 rounded-t-md flex justify-between items-center border-orange-200 border-b-0 border shadow-lg cursor-pointer",
+                        "px-4 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg cursor-pointer",
                         {
-                            "bg-orange-400 text-white": state.global
-                                ? state.genreIdx == -1
-                                : state.cityIdx == -1 && state.genreIdx == -1,
-                            "bg-white text-orange-400": state.global
-                                ? state.genreIdx != -1
-                                : state.cityIdx != -1 || state.genreIdx != -1,
+                            "bg-orange-400 text-white border-orange-500 hover:border-orange-600":
+                                state.global
+                                    ? state.genreIdx == -1
+                                    : state.cityIdx == -1 &&
+                                    state.genreIdx == -1,
+
+                            "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
+                                state.global
+                                    ? state.genreIdx != -1
+                                    : state.cityIdx != -1 ||
+                                    state.genreIdx != -1,
                         }
                     )}
                 >
@@ -147,38 +164,35 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                 {!state.global && (
                     <div
                         className={classNames(
-                            "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-orange-200 border-b-0 border shadow-lg relative",
+                            "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg relative cursor-pointer",
                             {
-                                "bg-orange-400 text-white": state.cityIdx != -1,
-                                "bg-white text-orange-400": state.cityIdx == -1,
+                                "bg-orange-400 text-white border-orange-500 hover:border-orange-600":
+                                    state.cityIdx != -1,
+                                "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
+                                    state.cityIdx == -1,
                             }
                         )}
+                        onClick={toggleCityDropDown}
                     >
-                        <span className="font-mono font-semibold cursor-default truncate">
+                        <span className="font-mono font-semibold truncate">
                             {chartList.countries[state.countryIdx]?.cities[
                                 state.cityIdx
                             ]?.name || "City"}
                         </span>
                         <AiOutlineCaretDown
-                            className={classNames(
-                                "w-6 h-6 rounded-md cursor-pointer",
-                                {
-                                    "hover:bg-white hover:text-orange-400":
-                                        state.cityIdx != -1,
-                                    "hover:bg-orange-400 hover:text-white":
-                                        state.cityIdx == -1,
-                                }
-                            )}
-                            onClick={() => {
-                                setState(o => ({
-                                    ...o,
-                                    cityDropDown: !o.cityDropDown,
-                                }))
-                            }}
+                            className={classNames("w-6 h-6 rounded-md", {
+                                "hover:bg-white hover:text-orange-400":
+                                    state.cityIdx != -1,
+                                "hover:bg-orange-400 hover:text-white":
+                                    state.cityIdx == -1,
+                            })}
                         />
 
                         {state.cityDropDown && (
-                            <div className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll">
+                            <div
+                                className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-50"
+                                ref={cityRef}
+                            >
                                 <input
                                     autoFocus
                                     className="w-full h-full border-b border-shade-300 bg-transparent rounded-sm outline-none mb-1"
@@ -224,16 +238,17 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                         0)) && (
                         <div
                             className={classNames(
-                                "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-orange-200 border-b-0 border shadow-lg relative",
+                                "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg relative cursor-pointer",
                                 {
-                                    "bg-orange-400 text-white":
+                                    "bg-orange-400 text-white border-orange-500 hover:border-orange-600":
                                         state.genreIdx != -1,
-                                    "bg-white text-orange-400":
+                                    "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
                                         state.genreIdx == -1,
                                 }
                             )}
+                            onClick={toggleGenreDropDown}
                         >
-                            <span className="font-mono font-semibold cursor-default truncate">
+                            <span className="font-mono font-semibold truncate">
                                 {state.global
                                     ? chartList.global.genres[state.genreIdx]
                                         ?.name || "Genre"
@@ -242,27 +257,18 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                                     ]?.name || "Genre"}
                             </span>
                             <AiOutlineCaretDown
-                                className={classNames(
-                                    "w-6 h-6 rounded-md cursor-pointer",
-                                    {
-                                        "hover:bg-white hover:text-orange-400":
-                                            state.genreIdx != -1,
-                                        "hover:bg-orange-400 hover:text-white":
-                                            state.genreIdx == -1,
-                                    }
-                                )}
-                                onClick={e => {
-                                    e.stopPropagation()
-                                    e.preventDefault()
-                                    setState(o => ({
-                                        ...o,
-                                        genreDropDown: !o.genreDropDown,
-                                    }))
-                                }}
+                                className={classNames("w-6 h-6 rounded-md", {
+                                    "hover:bg-white hover:text-orange-400":
+                                        state.genreIdx != -1,
+                                    "hover:bg-orange-400 hover:text-white":
+                                        state.genreIdx == -1,
+                                })}
                             />
-                            {/*<div className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-10">*/}
                             {state.genreDropDown && (
-                                <div className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-10">
+                                <div
+                                    className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-50"
+                                    ref={genreRef}
+                                >
                                     {(state.global
                                         ? chartList.global
                                         : chartList.countries[state.countryIdx]
@@ -275,7 +281,6 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                                                     ...o,
                                                     cityIdx: -1,
                                                     genreIdx: idx,
-                                                    genreDropDown: false,
                                                 }))
                                             }
                                         >

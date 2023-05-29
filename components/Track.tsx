@@ -19,10 +19,7 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
             href={`/track?${new URLSearchParams({ id: track.key }).toString()}`}
             className="p-4  border border-orange-400 rounded-md shadow-lg w-48 aspect-square cursor-pointer hover:scale-[1.02] hover:shadow-lg"
         >
-            <div
-                className="rounded-md w-full aspect-square relative "
-                id="image"
-            >
+            <div className="rounded-md w-full aspect-square relative ">
                 <Image
                     src={
                         track.images?.coverarthq ||
