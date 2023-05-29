@@ -1,6 +1,7 @@
 import { env } from "@/env.mjs"
 import { ITrack } from "@/types/chartTrack"
-export const chartsTrack = async ({
+import { readFile, readFileSync } from "fs"
+export const getChartTracks = async ({
     listId,
     pageSize = 20,
     startFrom = 0,
@@ -9,6 +10,14 @@ export const chartsTrack = async ({
     pageSize?: number
     startFrom?: number
 }) => {
+    const resp: { properties: {}; tracks: ITrack[] } = JSON.parse(
+        readFileSync(
+            "/home/immo/Documents/Coding/frontend-assignment/responses/charts_track.json",
+            "utf8"
+        )
+    )
+    return resp.tracks
+
     const url = new URL("https://shazam.p.rapidapi.com/charts/track")
 
     const params = new URLSearchParams({
@@ -34,7 +43,7 @@ export const chartsTrack = async ({
                 headers,
             }
         ).then(res => res.json())
-        return response
+        return response.tracks
     } catch (err) {
         console.error(err)
     }

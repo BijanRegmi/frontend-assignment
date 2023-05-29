@@ -3,6 +3,8 @@ import { publicProcedure, router } from "../trpc"
 import { z } from "zod"
 import { TRPCError } from "@trpc/server"
 import { ISearchResponse } from "@/types/searchResponse"
+import { getChartTracks } from "@/lib/chartsTrack"
+import { ITrack } from "@/types/chartTrack"
 
 export const appRouter = router({
     autocomplete: publicProcedure
@@ -36,6 +38,33 @@ export const appRouter = router({
                 return response
             }
         }),
+    getTracks: publicProcedure
+        .input(
+            z.object({
+                listId: z.string(),
+                cursor: z.number().nullish(),
+            })
+        )
+        .query(
+            async ({
+                input,
+            }): Promise<{
+                tracks: ITrack[]
+                nextCursor: number | undefined
+            }> => {
+                const tracks = await getChartTracks({
+                    listId: input.listId,
+                    pageSize: 20,
+                    startFrom: input.cursor || 0,
+                })
+                const nextCursor =
+                    tracks.length < 20
+                        ? undefined
+                        : tracks.length + (input.cursor || 0)
+
+                return { tracks, nextCursor }
+            }
+        ),
 })
 
 export type AppRouter = typeof appRouter

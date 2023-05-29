@@ -5,7 +5,6 @@ export interface IChartTrack {
 
 export interface ITrack {
     layout: string
-    type: TrackType
     key: string
     title: string
     subtitle: string
