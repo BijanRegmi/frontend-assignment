@@ -5,7 +5,7 @@ import { chartFilterState } from "./state"
 import { Fragment, useEffect, useState } from "react"
 import { ChartList } from "@/types/chartList"
 import { trpc } from "./TrpcContext"
-import { TrackCard } from "./Track"
+import { TrackCard, TrackCardSkeleton } from "./Track"
 import { useObserverRef } from "@/lib/useObserver"
 
 export const Charts = ({ chartList }: { chartList: ChartList }) => {
@@ -57,12 +57,16 @@ export const Charts = ({ chartList }: { chartList: ChartList }) => {
                             ))}
                         </Fragment>
                     ))}
+
+                {((isFetchingNextPage && hasNextPage) || isFetching) && (
+                    <>
+                        {Array.from({ length: 20 }).map((_, idx) => (
+                            <TrackCardSkeleton key={idx} />
+                        ))}
+                    </>
+                )}
             </div>
-            <div ref={observerRef} className="w-full text-center">
-                {(isFetchingNextPage && hasNextPage) || isFetching
-                    ? "Loading..."
-                    : "That's all we have :)"}
-            </div>
+            <div className="h-0 w-0 mt-24" ref={observerRef} />
         </>
     )
 }

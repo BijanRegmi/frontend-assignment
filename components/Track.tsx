@@ -46,3 +46,24 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
         </Link>
     )
 }
+
+export const TrackCardSkeleton = () => {
+    return (
+        <div className="p-4 border border-transparent rounded-md shadow-lg w-48 aspect-square cursor-pointer text-transparent animate-pulse">
+            <div className="rounded-md w-full aspect-square relative ">
+                <Image
+                    src="https://discussions.apple.com/content/attachment/592590040"
+                    alt="Track cover"
+                    fill
+                    className="w-full aspect-square rounded-md"
+                />
+            </div>
+            <div className="mt-2 w-full">
+                <h1 className="text-lg rounded-md bg-shade-200 animate-pulse">
+                    .
+                </h1>
+                <h2 className="w-full">.</h2>
+            </div>
+        </div>
+    )
+}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useObserverRef } from "@/lib/useObserver"
-import { TrackCard } from "./Track"
+import { TrackCard, TrackCardSkeleton } from "./Track"
 import { trpc } from "./TrpcContext"
 import { ITrack } from "@/types/chartTrack"
 import { Fragment } from "react"
@@ -54,12 +54,16 @@ export const SearchResult = ({
                             ))}
                         </Fragment>
                     ))}
+
+                {((isFetchingNextPage && hasNextPage) || isFetching) && (
+                    <>
+                        {Array.from({ length: tracks.length }).map((_, idx) => (
+                            <TrackCardSkeleton key={idx} />
+                        ))}
+                    </>
+                )}
             </div>
-            <div ref={observerRef} className="w-full text-center">
-                {(isFetchingNextPage && hasNextPage) || isFetching
-                    ? "Loading..."
-                    : "That's all we have :)"}
-            </div>
+            <div className="h-0 w-0 mt-24" ref={observerRef} />
         </>
     )
 }
