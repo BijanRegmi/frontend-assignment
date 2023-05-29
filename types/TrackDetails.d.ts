@@ -1,47 +1,30 @@
-export interface SearchResources {
-    "related-tracks": { [id: string]: { id: string; type: string } }
-    albums: ResourcesAlbums
-    lyrics: { [key: string]: Lyric }
-    "shazam-songs": { [key: string]: ShazamSong }
-}
+import { IImages, TrackArtist } from "./chartTrack"
 
-export interface Lyric {
-    id: string
+export interface TrackDetails {
     type: string
-    attributes: LyricAttrib
-}
-
-export interface LyricAttrib {
-    text: string[]
-    footer: string
-    musixmatchLyricsId: string
-    providerName: string
-    syncAvailable: boolean
-}
-
-export interface ShazamSong {
-    id: string
-    type: string
-    attributes: ShazamSongAttrib
-    relationships: Relationships
-}
-
-export interface ShazamSongAttrib {
-    type: string
+    key: string
     title: string
-    artist: string
-    primaryArtist: string
-    label: string
-    explicit: boolean
-    isrc: string
-    webUrl: string
-    images: {
-        artistAvatar: string
-        coverArt: string
-        coverArtHq: string
-    }
+    subtitle: string
+    images: IImages
+    url: string
+    artists: TrackArtist[]
     genres: { primary: string }
-    streaming?: {
-        preview?: string
-    }
+    albumadamid: string
+    sections: Section[]
+}
+
+export interface Section {
+    type: string
+    metapages?: { image: string; caption: string }
+    tabname: string
+    metadata?: { title: string; text: string }[]
+    text?: string[]
+    footer?: string
+    youtubeurl?: Youtubeurl
+}
+
+export interface Youtubeurl {
+    caption: string
+    image: { dimensions: { width: number; height: number }; url: string }
+    actions: { name: string; type: string; uri: string }[]
 }

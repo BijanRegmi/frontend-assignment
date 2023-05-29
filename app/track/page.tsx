@@ -1,8 +1,115 @@
-import { redirect } from "next/navigation"
+import { AlbumCard } from "@/components/AlbumCard"
+import { SongCard } from "@/components/SongCard"
+import { getArtistSummary } from "@/lib/getArtistSummary"
+import { getTrackDetails } from "@/lib/getTrackDetails"
+import { notFound, redirect } from "next/navigation"
+import { AiOutlinePlayCircle } from "react-icons/ai"
 
-const TrackPage = ({ searchParams }: { searchParams: { id?: string } }) => {
+const TrackPage = async ({
+    searchParams,
+}: {
+    searchParams: { id?: string }
+}) => {
     if (!searchParams.id) redirect("/")
-    return <div>{searchParams.id}</div>
+
+    const track = await getTrackDetails({ key: searchParams.id })
+    if (!track) return notFound()
+
+    const summary = await getArtistSummary({
+        id: track.artists.pop()?.adamid as string,
+    })
+    if (!summary) return notFound()
+
+    const artist =
+        summary.artists[Object.keys(summary.artists)[0]].attributes.name
+
+    const lyrics = track.sections.find(s => s.type == "LYRICS")
+
+    return (
+        <div className="h-full w-full max-h-full overflow-scroll relative">
+            <div
+                className="w-full h-1/5 bg-orange-50"
+                style={{
+                    backgroundImage: `url(${track?.images.coverarthq})`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                }}
+            />
+            <div
+                className="bg-blue-200 rounded-3xl border-white border-4 h-1/5 aspect-square absolute left-1/2 top-[10%] -translate-x-1/2"
+                style={{
+                    backgroundImage: `url(${track.images.coverarthq || track.images.background
+                        })`,
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                }}
+            />
+            <div className="w-full h-4/5 flex flex-col py-4">
+                <div className="flex flex-row items-center cursor-default z-20">
+                    <div className="px-4">
+                        <AiOutlinePlayCircle className="text-4xl" />
+                    </div>
+                    <div>
+                        <h2 className="font-semibold text-2xl">
+                            {track.subtitle}
+                        </h2>
+                        <h1 className="text-4xl font-bold">{track.title}</h1>
+                        <h3 className="text-xl font-medium">
+                            {track.genres.primary}
+                        </h3>
+                    </div>
+                </div>
+                <div className="flex flex-row">
+                    <div className="grow p-4">
+                        <div className="w-fit p-4 border border-shade-800 rounded-md shadow-lg mb-8">
+                            <h1 className="text-2xl py-4 font-medium cursor-default">
+                                More By{" "}
+                                {
+                                    summary.artists[
+                                        Object.keys(summary.artists)[0]
+                                    ].attributes.name
+                                }
+                            </h1>
+                            <ul className="grid grid-cols-2 gap-y-4 gap-x-8">
+                                {Object.keys(summary.songs).map(sk => {
+                                    const song = summary.songs[sk]
+                                    return (
+                                        <SongCard key={song.id} song={song} />
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                        <div className="w-fit p-4 border border-shade-400 rounded-md shadow-lg">
+                            <h1 className="text-2xl py-4 font-medium cursor-default">
+                                Albums
+                            </h1>
+                            <ul className="grid grid-cols-2 gap-y-4 gap-x-8">
+                                {Object.keys(summary.albums).map(ak => {
+                                    const album = summary.albums[ak]
+                                    return (
+                                        <AlbumCard
+                                            key={album.id}
+                                            album={album}
+                                        />
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    </div>
+                    <div className="px-4 w-max basis-1/3 text-center border-l border-shade-300">
+                        <h1 className="text-xl font-semibold mb-2">Lyrics</h1>
+                        <ul>
+                            {lyrics?.text?.map((t, idx) =>
+                                t ? <li key={idx}>{t}</li> : <br key={idx} />
+                            )}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
 }
 
 export default TrackPage

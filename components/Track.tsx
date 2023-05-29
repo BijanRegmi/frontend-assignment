@@ -25,6 +25,7 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
             >
                 <Image
                     src={
+                        track.images?.coverarthq ||
                         track.images?.background ||
                         "https://discussions.apple.com/content/attachment/592590040"
                     }
