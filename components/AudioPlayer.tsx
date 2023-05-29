@@ -1,9 +1,22 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import classNames from "classnames"
+import {
+    ComponentProps,
+    HTMLAttributes,
+    useEffect,
+    useRef,
+    useState,
+} from "react"
 import { CiPlay1, CiPause1 } from "react-icons/ci"
 
-export const AudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
+export const AudioPlayer = ({
+    audioUrl,
+    className = "",
+}: {
+    audioUrl: string
+    className?: ComponentProps<"div">["className"]
+}) => {
     const ref = useRef<HTMLAudioElement>(null)
     const [state, setState] = useState({
         playing: false,
@@ -26,7 +39,7 @@ export const AudioPlayer = ({ audioUrl }: { audioUrl: string }) => {
     return (
         <>
             <audio src={audioUrl} className="hidden" ref={ref} />
-            <div className="aspect-square h-full p-2">
+            <div className={classNames("aspect-square h-full p-2", className)}>
                 <div
                     className="relative h-full w-full rounded-full flex items-center justify-center"
                     style={{

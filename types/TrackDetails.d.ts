@@ -6,6 +6,7 @@ export interface TrackDetails {
     title: string
     subtitle: string
     images: IImages
+    hub: { actions?: { uri?: string }[] }
     url: string
     artists: TrackArtist[]
     genres: { primary: string }

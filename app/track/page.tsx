@@ -1,4 +1,5 @@
 import { AlbumCard } from "@/components/AlbumCard"
+import { AudioPlayer } from "@/components/AudioPlayer"
 import { SongCard } from "@/components/SongCard"
 import { env } from "@/env.mjs"
 import { API } from "@/lib/Api"
@@ -31,6 +32,7 @@ const TrackPage = async ({
     if (!summary) return notFound()
 
     const lyrics = track.sections.find(s => s.type == "LYRICS")
+    const audioUrl = track.hub.actions?.find(a => a.uri)?.uri
 
     return (
         <div className="h-full w-full max-h-full overflow-scroll relative">
@@ -56,9 +58,13 @@ const TrackPage = async ({
             />
             <div className="w-full h-4/5 flex flex-col py-4">
                 <div className="flex flex-row items-center cursor-default z-20">
-                    <div className="px-4">
-                        <AiOutlinePlayCircle className="text-4xl" />
-                    </div>
+                    {audioUrl ? (
+                        <AudioPlayer audioUrl={audioUrl} className="text-4xl" />
+                    ) : (
+                        <div className="px-4">
+                            <AiOutlinePlayCircle className="text-4xl" />
+                        </div>
+                    )}
                     <div>
                         <h2 className="font-semibold text-2xl">
                             {track.subtitle}
