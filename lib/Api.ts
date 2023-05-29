@@ -39,9 +39,9 @@ export const API = async <T>({
             next: { revalidate },
             method: "GET",
             headers,
-        }).then(res => {
+        }).then(async res => {
             if (res.status == 200) return res.json()
-            else throw new Error(res.statusText)
+            else throw new Error(await res.text())
         })
 
         return response

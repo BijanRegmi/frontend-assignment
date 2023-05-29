@@ -3,6 +3,7 @@ import { z } from "zod"
 import { ISearchResponse, ISearchResultResponse } from "@/types/searchResponse"
 import { ITrack } from "@/types/chartTrack"
 import { API } from "@/lib/Api"
+import { env } from "@/env.mjs"
 
 export const appRouter = router({
     autocomplete: publicProcedure
@@ -10,7 +11,7 @@ export const appRouter = router({
         .mutation(async ({ input }) => {
             const response = await API<ISearchResponse>({
                 endpoint: "/auto-complete",
-                demo: true,
+                demo: env.DEMO,
                 filepath: "responses/autoComplete.json",
                 params: { term: input.term },
             })
@@ -41,7 +42,7 @@ export const appRouter = router({
             }>({
                 endpoint: "/charts/track",
                 params,
-                demo: true,
+                demo: env.DEMO,
                 filepath: "responses/charts_track.json",
             })
 
@@ -66,7 +67,7 @@ export const appRouter = router({
 
             const tracks = await API<ISearchResultResponse>({
                 endpoint: "/search",
-                demo: true,
+                demo: env.DEMO,
                 filepath: "responses/search.json",
                 params: {
                     term: input.term,

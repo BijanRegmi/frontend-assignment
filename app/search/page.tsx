@@ -2,6 +2,7 @@ import { SearchResult } from "@/components/SearchResults"
 import { API } from "@/lib/Api"
 import { ISearchResultResponse } from "@/types/searchResponse"
 import { notFound, redirect } from "next/navigation"
+import { env } from "@/env.mjs"
 
 const SearchPage = async ({
     searchParams,
@@ -12,7 +13,7 @@ const SearchPage = async ({
 
     const response = await API<ISearchResultResponse>({
         endpoint: "/search",
-        demo: true,
+        demo: env.DEMO,
         filepath: "responses/search.json",
         params: {
             term: searchParams.q,

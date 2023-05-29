@@ -1,5 +1,6 @@
 import { AlbumCard } from "@/components/AlbumCard"
 import { SongCard } from "@/components/SongCard"
+import { env } from "@/env.mjs"
 import { API } from "@/lib/Api"
 import { ArtistSummary } from "@/types/ArtistSummary"
 import { TrackDetails } from "@/types/TrackDetails"
@@ -15,7 +16,7 @@ const TrackPage = async ({
 
     const track = await API<TrackDetails>({
         endpoint: "/songs/get-details",
-        demo: true,
+        demo: env.DEMO,
         filepath: "responses/trackDetails.json",
         params: { key: searchParams.id },
     })
@@ -23,7 +24,7 @@ const TrackPage = async ({
 
     const summary = await API<{ resources: ArtistSummary }>({
         endpoint: "/artists/get-summary",
-        demo: true,
+        demo: env.DEMO,
         params: { id: track.artists.pop()?.adamid as string },
         filepath: "responses/artistSummary.json",
     }).then(res => res?.resources)
@@ -45,8 +46,9 @@ const TrackPage = async ({
             <div
                 className="bg-blue-200 rounded-3xl border-white border-4 h-1/5 aspect-square absolute left-1/2 top-[10%] -translate-x-1/2"
                 style={{
-                    backgroundImage: `url(${track.images.coverarthq || track.images.background
-                        })`,
+                    backgroundImage: `url(${
+                        track.images.coverarthq || track.images.background
+                    })`,
                     backgroundPosition: "center",
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
