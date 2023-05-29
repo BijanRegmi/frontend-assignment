@@ -5,6 +5,7 @@ import { TRPCError } from "@trpc/server"
 import { ISearchResponse } from "@/types/searchResponse"
 import { getChartTracks } from "@/lib/chartsTrack"
 import { ITrack } from "@/types/chartTrack"
+import { getSearchResults } from "@/lib/searchTrack"
 
 export const appRouter = router({
     autocomplete: publicProcedure
@@ -38,6 +39,7 @@ export const appRouter = router({
                 return response
             }
         }),
+
     getTracks: publicProcedure
         .input(
             z.object({
@@ -52,19 +54,47 @@ export const appRouter = router({
                 tracks: ITrack[]
                 nextCursor: number | undefined
             }> => {
+                const LIMIT = 20
+
                 const tracks = await getChartTracks({
                     listId: input.listId,
-                    pageSize: 20,
+                    pageSize: LIMIT,
                     startFrom: input.cursor || 0,
                 })
+
                 const nextCursor =
-                    tracks.length < 20
+                    tracks.length < LIMIT
                         ? undefined
                         : tracks.length + (input.cursor || 0)
 
                 return { tracks, nextCursor }
             }
         ),
+
+    getSearchResults: publicProcedure
+        .input(
+            z.object({
+                term: z.string(),
+                prefetched: z.number().default(0),
+                cursor: z.number().nullish(),
+            })
+        )
+        .query(async ({ input }) => {
+            const LIMIT = 20
+
+            const tracks = await getSearchResults({
+                term: input.term,
+                limit: LIMIT,
+                offset: (input.cursor || 0) + input.prefetched,
+            })
+
+            const nextCursor =
+                tracks.length < LIMIT
+                    ? undefined
+                    : tracks.length + (input.cursor || 0)
+
+            return { tracks, nextCursor }
+        }),
 })
 
 export type AppRouter = typeof appRouter

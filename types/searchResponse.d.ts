@@ -5,7 +5,7 @@ export interface ISearchResponse {
 }
 
 export interface ISearchResultResponse {
-    tracks: { hits: { track: ITrack; snippet?: string } }
+    tracks: { hits: { track: ITrack; snippet?: string }[] }
     artists: { hits: { artist: Artist }[] }
 }
 

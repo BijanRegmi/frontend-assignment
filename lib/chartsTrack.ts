@@ -1,6 +1,6 @@
 import { env } from "@/env.mjs"
 import { ITrack } from "@/types/chartTrack"
-import { readFile, readFileSync } from "fs"
+import { readFileSync } from "fs"
 export const getChartTracks = async ({
     listId,
     pageSize = 20,

@@ -1,28 +1,18 @@
 "use client"
 
-import { useRecoilState } from "recoil"
-import { chartFilterState } from "./state"
-import { Fragment, useEffect, useState } from "react"
-import { ChartList } from "@/types/chartList"
-import { trpc } from "./TrpcContext"
-import { TrackCard } from "./Track"
 import { useObserverRef } from "@/lib/useObserver"
+import { TrackCard } from "./Track"
+import { trpc } from "./TrpcContext"
+import { ITrack } from "@/types/chartTrack"
+import { Fragment } from "react"
 
-export const Charts = ({ chartList }: { chartList: ChartList }) => {
-    const [state, _setState] = useRecoilState(chartFilterState)
-    const [id, setId] = useState("")
-
-    useEffect(() => {
-        const country = chartList.countries[state.countryIdx]
-        const listId =
-            country?.cities[state.cityIdx]?.listid ||
-            country?.genres[state.genreIdx]?.listid ||
-            country?.listid ||
-            chartList.global.genres[state.genreIdx]?.listid ||
-            ""
-        setId(listId)
-    }, [state, chartList])
-
+export const SearchResult = ({
+    term,
+    tracks,
+}: {
+    term: string
+    tracks: ITrack[]
+}) => {
     const {
         data,
         isSuccess,
@@ -30,10 +20,10 @@ export const Charts = ({ chartList }: { chartList: ChartList }) => {
         fetchNextPage,
         isFetchingNextPage,
         isFetching,
-    } = trpc.getTracks.useInfiniteQuery(
-        { listId: id },
-        { getNextPageParam: lastPage => lastPage.nextCursor }
-    )
+    } = trpc.getSearchResults.useInfiniteQuery({
+        term,
+        prefetched: tracks.length,
+    })
 
     const observerRef = useObserverRef<HTMLDivElement>({
         onIntersect: () => {
@@ -44,6 +34,10 @@ export const Charts = ({ chartList }: { chartList: ChartList }) => {
     return (
         <>
             <div className="grid grid-cols-[repeat(auto-fill,13rem)] gap-x-4 gap-y-6 items-center justify-between py-3 w-full mt-4">
+                {tracks.map(track => (
+                    <TrackCard key={track.key} track={track} />
+                ))}
+
                 {isSuccess &&
                     data?.pages?.map((page, pageIdx) => (
                         <Fragment key={pageIdx}>
