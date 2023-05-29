@@ -1,6 +1,7 @@
 import { formatString } from "@/lib/utils"
 import { ArtistSummary } from "@/types/ArtistSummary"
 import Image from "next/image"
+import { AudioPlayer } from "./AudioPlayer"
 
 export const SongCard = ({
     song,
@@ -8,8 +9,9 @@ export const SongCard = ({
     song: ArtistSummary["songs"][string]
 }) => {
     const genreList = song.attributes.genreNames.map(formatString).join(", ")
+    const audioUrl = song.attributes.previews.find(p => !!p.url)?.url
     return (
-        <div className="h-20 flex items-center w-full gap-2 shadow-lg rounded-md border-2 border-l-0 border-primary-200 hover:border-primary-300 hover:translate-x-1">
+        <div className="h-20 flex items-center w-full gap-2 shadow-md rounded-md border border-l-0 border-orange-300 hover:border-orange-400 hover:shadow-lg">
             <div className="rounded-l-md h-full aspect-square relative">
                 <Image
                     src={song.attributes.artwork.url
@@ -34,6 +36,11 @@ export const SongCard = ({
                     {song.attributes.releaseDate.toString()}
                 </h3>
             </div>
+            {audioUrl != undefined && (
+                <div className="ml-auto h-2/3">
+                    <AudioPlayer audioUrl={audioUrl} />
+                </div>
+            )}
         </div>
     )
 }
