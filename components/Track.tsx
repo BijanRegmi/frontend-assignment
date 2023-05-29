@@ -4,6 +4,16 @@ import { ITrack } from "@/types/chartTrack"
 import Link from "next/link"
 
 export const TrackCard = ({ track }: { track: ITrack }) => {
+    const hasArtisist = !!track.artists?.some(t => t.alias)
+    const hasSubtitle = !!track.subtitle
+    let h2Str: string
+
+    if (hasArtisist) {
+        const arts = track.artists?.filter(a => a.alias != undefined)
+        h2Str = arts?.map(a => formatArtistName(a.alias)).join(", ") || ""
+    } else if (hasSubtitle) h2Str = track.subtitle
+    else h2Str = ""
+
     return (
         <Link
             href={`/track?${new URLSearchParams({ id: track.key }).toString()}`}
@@ -30,23 +40,9 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
                 >
                     {track.title}
                 </h1>
-                {track.artists != undefined &&
-                    (() => {
-                        const arts = track.artists.filter(
-                            a => a.alias != undefined
-                        )
-                        const str = arts
-                            .map(a => formatArtistName(a.alias))
-                            .join(", ")
-                        return (
-                            <h2
-                                className="text-shade-800 truncate w-full"
-                                title={str}
-                            >
-                                {str}
-                            </h2>
-                        )
-                    })()}
+                <h2 className="text-shade-800 truncate w-full" title={h2Str}>
+                    {h2Str}
+                </h2>
             </div>
         </Link>
     )
