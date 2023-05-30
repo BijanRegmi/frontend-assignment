@@ -18,8 +18,8 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
     const audioUrl = track.hub.actions?.find(a => !!a.uri)?.uri
 
     return (
-        <div className="p-4  border border-orange-400 rounded-md shadow-lg w-48 aspect-square cursor-pointer hover:scale-[1.02] hover:shadow-lg">
-            <div className="rounded-md w-full aspect-square relative ">
+        <div className="p-4 border border-orange-400 rounded-md shadow-lg w-48 aspect-square cursor-pointer hover:shadow-lg">
+            <div className="rounded-md w-full aspect-square relative mb-1">
                 <Image
                     src={
                         track.images?.coverarthq ||
@@ -41,13 +41,14 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
                 href={`/track?${new URLSearchParams({
                     id: track.key,
                 }).toString()}`}
-                className="mt-2 w-full"
+                className="mt-2 w-full group transition duration-300"
             >
                 <h1
-                    className="font-semibold text-lg text-shade-900 truncate"
+                    className="font-semibold text-lg text-shade-900 truncate max-w-fit"
                     title={track.title}
                 >
                     {track.title}
+                    <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-[1px] bg-shade-800" />
                 </h1>
                 <h2 className="text-shade-800 truncate w-full" title={h2Str}>
                     {h2Str}
@@ -60,7 +61,7 @@ export const TrackCard = ({ track }: { track: ITrack }) => {
 export const TrackCardSkeleton = () => {
     return (
         <div className="p-4 border border-transparent rounded-md shadow-lg w-48 aspect-square cursor-pointer text-transparent animate-pulse">
-            <div className="rounded-md w-full aspect-square relative ">
+            <div className="rounded-md w-full aspect-square relative mb-1">
                 <Image
                     src="https://discussions.apple.com/content/attachment/592590040"
                     alt="Track cover"
@@ -71,6 +72,7 @@ export const TrackCardSkeleton = () => {
             <div className="mt-2 w-full">
                 <h1 className="text-lg rounded-md bg-shade-200 animate-pulse">
                     .
+                    <span className="block max-w-0 h-0.5" />
                 </h1>
                 <h2 className="w-full">.</h2>
             </div>

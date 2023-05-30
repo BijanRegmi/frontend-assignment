@@ -63,7 +63,7 @@ export const appRouter = router({
             })
         )
         .query(async ({ input }) => {
-            const LIMIT = 20
+            const LIMIT = 5
 
             const tracks = await API<ISearchResultResponse>({
                 endpoint: "/search",

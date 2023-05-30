@@ -14,7 +14,7 @@ export const Sidebar = () => {
     ]
 
     return (
-        <div className="w-52 h-full overflow-scroll border-r border-shade-300">
+        <div className="w-52 h-full overflow-scroll border-r border-shade-300 shrink-0">
             <ul className="flex flex-col justify-around gap-4 bg-shade-0 text-shade-900 rounded-md py-8">
                 {links.map((link, idx) => (
                     <li

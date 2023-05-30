@@ -1,6 +1,7 @@
 import { formatString } from "@/lib/utils"
 import { ArtistSummary } from "@/types/ArtistSummary"
 import Image from "next/image"
+import Link from "next/link"
 
 export const AlbumCard = ({
     album,
@@ -9,7 +10,7 @@ export const AlbumCard = ({
 }) => {
     const genreList = album.attributes.genreNames.map(formatString).join(", ")
     return (
-        <div className="h-20 flex items-center w-full gap-2 shadow-lg rounded-md border-2 border-l-0 border-primary-200 hover:border-primary-300 hover:translate-x-1">
+        <div className="h-20 flex items-center w-full gap-2 shadow-md rounded-md border border-l-0 border-orange-300 hover:border-orange-400 hover:shadow-lg">
             <div className="rounded-l-md h-full aspect-square relative">
                 <Image
                     src={album.attributes.artwork.url
@@ -20,12 +21,19 @@ export const AlbumCard = ({
                     className="w-full aspect-square rounded-l-md"
                 />
             </div>
-            <div className="cursor-default truncate">
+            <Link
+                prefetch={false}
+                href={`/album?${new URLSearchParams({
+                    id: album.id,
+                }).toString()}`}
+                className="cursor-pointer group transition duration-300 truncate"
+            >
                 <h1
-                    className="text-xl font-semibold truncate text-primary-300"
+                    className="text-xl font-semibold truncate text-primary-300 max-w-fit"
                     title={album.attributes.name}
                 >
                     {album.attributes.name}
+                    <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-[1px] bg-shade-800" />
                 </h1>
                 <h2 className="truncate text-shade-700" title={genreList}>
                     {genreList}
@@ -33,7 +41,7 @@ export const AlbumCard = ({
                 <h3 className="text-sm text-shade-400 font-semibold">
                     {album.attributes.releaseDate.toString()}
                 </h3>
-            </div>
+            </Link>
         </div>
     )
 }

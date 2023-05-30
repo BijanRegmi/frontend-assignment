@@ -86,7 +86,7 @@ const TrackPage = async ({
                                     ].attributes.name
                                 }
                             </h1>
-                            <ul className="grid grid-cols-2 gap-y-4 gap-x-8">
+                            <ul className="grid grid-cols-3 gap-y-4 gap-x-8">
                                 {Object.keys(summary.songs).map(sk => {
                                     const song = summary.songs[sk]
                                     return (
@@ -99,7 +99,7 @@ const TrackPage = async ({
                             <h1 className="text-2xl py-4 font-medium cursor-default">
                                 Albums
                             </h1>
-                            <ul className="grid grid-cols-2 gap-y-4 gap-x-8">
+                            <ul className="grid grid-cols-3 gap-y-4 gap-x-8">
                                 {Object.keys(summary.albums).map(ak => {
                                     const album = summary.albums[ak]
                                     return (
@@ -112,7 +112,7 @@ const TrackPage = async ({
                             </ul>
                         </div>
                     </div>
-                    <div className="px-4 w-max basis-1/3 text-center border-l border-shade-300">
+                    <div className="px-4 w-max basis-1/4 text-center border-l border-shade-300 shrink-0">
                         <h1 className="text-xl font-semibold mb-2">Lyrics</h1>
                         <ul>
                             {lyrics?.text?.map((t, idx) =>

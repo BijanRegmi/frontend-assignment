@@ -2,6 +2,7 @@ import { formatString } from "@/lib/utils"
 import { ArtistSummary } from "@/types/ArtistSummary"
 import Image from "next/image"
 import { AudioPlayer } from "./AudioPlayer"
+import Link from "next/link"
 
 export const SongCard = ({
     song,
@@ -22,12 +23,19 @@ export const SongCard = ({
                     className="w-full aspect-square rounded-l-md"
                 />
             </div>
-            <div className="cursor-default truncate">
+            <Link
+                prefetch={false}
+                href={`/track?${new URLSearchParams({
+                    id: song.id,
+                }).toString()}`}
+                className="truncate group transition duration-300 cursor-pointer"
+            >
                 <h1
-                    className="text-xl font-semibold truncate text-primary-300"
+                    className="text-xl font-semibold truncate text-primary-300 max-w-fit"
                     title={song.attributes.name}
                 >
                     {song.attributes.name}
+                    <span className="block max-w-0 group-hover:max-w-full transition-all duration-300 h-[1px] bg-shade-800" />
                 </h1>
                 <h2 className="truncate text-shade-700" title={genreList}>
                     {genreList}
@@ -35,7 +43,7 @@ export const SongCard = ({
                 <h3 className="text-sm text-shade-400 font-semibold">
                     {song.attributes.releaseDate.toString()}
                 </h3>
-            </div>
+            </Link>
             {audioUrl != undefined && (
                 <div className="ml-auto h-2/3">
                     <AudioPlayer audioUrl={audioUrl} />
