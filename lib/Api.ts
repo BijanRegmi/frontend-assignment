@@ -26,13 +26,13 @@ export const API = async <T>({
             return resp
         }
 
-        const url = new URL(`https://${env.RapidAPI_HOST}${endpoint}`)
+        const url = new URL(`https://${env.RAPIDAPI_HOST}${endpoint}`)
         const urlParams = new URLSearchParams(params)
         url.search = urlParams.toString()
 
         const headers = {
             "X-RapidAPI-Key": env.RAPIDAPI_KEY,
-            "X-RapidAPI-Host": env.RapidAPI_HOST,
+            "X-RapidAPI-Host": env.RAPIDAPI_HOST,
         }
 
         const response: T = await fetch(url, {
