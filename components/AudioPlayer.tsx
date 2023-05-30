@@ -54,7 +54,7 @@ export const AudioPlayer = ({
                         }deg)`,
                     }}
                 >
-                    <div className="absolute bg-white z-50 w-[90%] h-[90%] rounded-full grid items-center cursor-pointer">
+                    <div className="absolute bg-white z-40 w-[90%] h-[90%] rounded-full grid items-center cursor-pointer">
                         {state.playing ? (
                             <CiPause1
                                 className="w-full"

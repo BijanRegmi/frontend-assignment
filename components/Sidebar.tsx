@@ -6,11 +6,11 @@ import { SlEvent } from "react-icons/sl"
 
 export const Sidebar = () => {
     const links = [
-        { title: "Home", icon: AiOutlineHome, href: "" },
-        { title: "Browse", icon: AiOutlineSearch, href: "" },
-        { title: "Radio", icon: FiRadio, href: "" },
-        { title: "Trending", icon: BiTrendingUp, href: "" },
-        { title: "Events", icon: SlEvent, href: "" },
+        { title: "Home", icon: AiOutlineHome, href: "/" },
+        { title: "Browse", icon: AiOutlineSearch, href: "/" },
+        { title: "Radio", icon: FiRadio, href: "/" },
+        { title: "Trending", icon: BiTrendingUp, href: "/" },
+        { title: "Events", icon: SlEvent, href: "/" },
     ]
 
     return (

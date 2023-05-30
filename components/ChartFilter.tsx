@@ -23,13 +23,22 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
         setState(o => ({ ...o, cityDropDown: !o.cityDropDown }))
 
     const countryRef = useOnClickOutside<HTMLDivElement>({
-        handler: () => setState(o => ({ ...o, countryDropDown: false })),
+        handler: () => {
+            if (state.countryDropDown)
+                setState(o => ({ ...o, countryDropDown: false }))
+        },
     })
     const cityRef = useOnClickOutside<HTMLDivElement>({
-        handler: () => setState(o => ({ ...o, cityDropDown: false })),
+        handler: () => {
+            if (state.cityDropDown)
+                setState(o => ({ ...o, cityDropDown: false }))
+        },
     })
     const genreRef = useOnClickOutside<HTMLDivElement>({
-        handler: () => setState(o => ({ ...o, genreDropDown: false })),
+        handler: () => {
+            if (state.genreDropDown)
+                setState(o => ({ ...o, genreDropDown: false }))
+        },
     })
 
     const switchToTop = () =>
@@ -39,46 +48,51 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
         <div className="flex flex-col bg-orange-100 rounded-lg pt-8 gap-6 chartfilter">
             <div
                 className={classNames(
-                    "px-4 w-48 border-orange-300 shadow-orange-700 bg-orange-400 text-white border-l-0 border-2 shadow-md rounded-r-lg py-4 flex justify-between items-center relative cursor-pointer hover:border-orange-300",
-                    { "rounded-br-none": state.countryDropDown }
+                    "px-4 w-48 border-orange-400 shadow-orange-300 bg-orange-200 text-orange-900 border-l-0 border-2 shadow-md rounded-r-lg py-4 flex justify-between items-center relative cursor-pointer hover:border-orange-500",
+                    {
+                        "rounded-b-none": state.countryDropDown,
+                        "shadow-one": state.countryDropDown,
+                    }
                 )}
                 onClick={toggleCountryDropDown}
+                ref={countryRef}
             >
                 <span className="font-mono font-semibold truncate">
                     {state.global
                         ? "GLOBAL"
                         : chartList.countries[state.countryIdx]?.name}
                 </span>
-                <AiOutlineCaretDown className="w-6 h-6 rounded-md hover:text-orange-400 hover:bg-white" />
+                <AiOutlineCaretDown className="w-6 h-6 rounded-md hover:text-orange-200 hover:bg-orange-900" />
                 {state.countryDropDown && (
-                    <div
-                        className="px-4 w-49 border-shade-500 border-l-0 border shadow-md py-4 top-full left-0 right-0 text-orange-500 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-50"
-                        ref={countryRef}
-                    >
+                    <div className="px-4 w-48 border-inherit shadow-inherit bg-inherit text-inherit border-l-0 border-t-0 border-2 shadow-md rounded-br-lg py-4 top-full left-0 absolute max-h-48 overflow-scroll z-50">
                         <input
                             autoFocus
-                            className="w-full h-full border-b border-shade-300 bg-transparent rounded-sm outline-none mb-1"
+                            className="w-full h-full bg-transparent rounded-sm outline-none mb-1 placeholder:text-inherit border-b border-orange-50"
                             onChange={setSearchCountry}
                             value={state.searchCountry}
                             placeholder="Search Country"
                             type="text"
                         />
-                        <span
-                            className="truncate border-b border-shade-200 py-1 cursor-pointer hover:font-semibold block"
-                            onClick={() =>
-                                setState(o => ({
-                                    ...o,
-                                    global: true,
-                                    countryIdx: -1,
-                                    cityIdx: -1,
-                                    genreIdx: -1,
-                                    countryDropDown: false,
-                                    searchCountry: "",
-                                }))
-                            }
-                        >
-                            Global
-                        </span>
+                        {"global".includes(
+                            state.searchCountry.toLowerCase()
+                        ) && (
+                            <span
+                                className="truncate py-1 cursor-pointer hover:font-semibold block"
+                                onClick={() =>
+                                    setState(o => ({
+                                        ...o,
+                                        global: true,
+                                        countryIdx: -1,
+                                        cityIdx: -1,
+                                        genreIdx: -1,
+                                        countryDropDown: false,
+                                        searchCountry: "",
+                                    }))
+                                }
+                            >
+                                Global
+                            </span>
+                        )}
                         {chartList.countries.map(
                             (c, idx) =>
                                 c.name
@@ -88,7 +102,7 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                                     ) && (
                                     <span
                                         key={c.id}
-                                        className="truncate border-b border-shade-200 py-1 cursor-pointer hover:font-semibold block"
+                                        className="truncate py-1 cursor-pointer hover:font-semibold block"
                                         onClick={() =>
                                             setState(o => ({
                                                 ...o,
@@ -120,20 +134,21 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                     </h2>
                     <h1 className="text-6xl font-bold">
                         {state.global
-                            ? `Top ${chartList.global.genres[state.genreIdx]
-                                ?.count || "200"
-                            }`
+                            ? `Top ${
+                                  chartList.global.genres[state.genreIdx]
+                                      ?.count || "200"
+                              }`
                             : chartList.countries[state.countryIdx]?.genres[
-                                state.genreIdx
-                            ]?.name || "Top 200"}
+                                  state.genreIdx
+                              ]?.name || "Top 200"}
                     </h1>
                     <h3 className="text-xl font-medium">
                         {state.global
                             ? chartList.global.genres[state.genreIdx]?.name ||
-                            "All"
+                              "All"
                             : chartList.countries[state.countryIdx]?.genres[
-                                state.genreIdx
-                            ]?.name || "All"}
+                                  state.genreIdx
+                              ]?.name || "All"}
                     </h3>
                 </div>
             </div>
@@ -144,17 +159,17 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                     className={classNames(
                         "px-4 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg cursor-pointer",
                         {
-                            "bg-orange-400 text-white border-orange-500 hover:border-orange-600":
+                            "bg-orange-200 text-orange-900 border-orange-400 hover:border-orange-500":
                                 state.global
                                     ? state.genreIdx == -1
                                     : state.cityIdx == -1 &&
-                                    state.genreIdx == -1,
+                                      state.genreIdx == -1,
 
                             "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
                                 state.global
                                     ? state.genreIdx != -1
                                     : state.cityIdx != -1 ||
-                                    state.genreIdx != -1,
+                                      state.genreIdx != -1,
                         }
                     )}
                 >
@@ -166,13 +181,14 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                         className={classNames(
                             "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg relative cursor-pointer",
                             {
-                                "bg-orange-400 text-white border-orange-500 hover:border-orange-600":
+                                "bg-orange-200 text-orange-900 border-orange-400 hover:border-orange-500":
                                     state.cityIdx != -1,
                                 "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
                                     state.cityIdx == -1,
                             }
                         )}
                         onClick={toggleCityDropDown}
+                        ref={cityRef}
                     >
                         <span className="font-mono font-semibold truncate">
                             {chartList.countries[state.countryIdx]?.cities[
@@ -181,7 +197,7 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                         </span>
                         <AiOutlineCaretDown
                             className={classNames("w-6 h-6 rounded-md", {
-                                "hover:bg-white hover:text-orange-400":
+                                "hover:bg-orange-900 hover:text-orange-200":
                                     state.cityIdx != -1,
                                 "hover:bg-orange-400 hover:text-white":
                                     state.cityIdx == -1,
@@ -189,13 +205,10 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                         />
 
                         {state.cityDropDown && (
-                            <div
-                                className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-50"
-                                ref={cityRef}
-                            >
+                            <div className="px-4 w-36 py-2 rounded-b-md border-t-0 border-2 border-inherit shadow-lg absolute top-full -left-0.5 bg-inherit max-h-48 overflow-scroll z-50 text-inherit">
                                 <input
                                     autoFocus
-                                    className="w-full h-full border-b border-shade-300 bg-transparent rounded-sm outline-none mb-1"
+                                    className="w-full h-full border-b border-inherit bg-transparent rounded-sm outline-none mb-1 placeholder:text-inherit"
                                     onChange={setSearchCity}
                                     value={state.searchCity}
                                     placeholder="Search City"
@@ -212,13 +225,12 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                                             ) && (
                                             <span
                                                 key={c.id}
-                                                className="truncate border-b border-shade-200 py-1 cursor-pointer hover:font-semibold block"
+                                                className="truncate py-1 cursor-pointer hover:font-semibold block"
                                                 onClick={() =>
                                                     setState(o => ({
                                                         ...o,
                                                         cityIdx: idx,
                                                         genreIdx: -1,
-                                                        cityDropDown: false,
                                                         searchCity: "",
                                                     }))
                                                 }
@@ -235,62 +247,60 @@ export const ChartFilter = ({ chartList }: { chartList: ChartList }) => {
                     (!state.global &&
                         state.countryIdx >= 0 &&
                         chartList.countries[state.countryIdx].genres.length >
-                        0)) && (
-                        <div
-                            className={classNames(
-                                "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg relative cursor-pointer",
-                                {
-                                    "bg-orange-400 text-white border-orange-500 hover:border-orange-600":
-                                        state.genreIdx != -1,
-                                    "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
-                                        state.genreIdx == -1,
-                                }
-                            )}
-                            onClick={toggleGenreDropDown}
-                        >
-                            <span className="font-mono font-semibold truncate">
-                                {state.global
-                                    ? chartList.global.genres[state.genreIdx]
-                                        ?.name || "Genre"
-                                    : chartList.countries[state.countryIdx]?.genres[
-                                        state.genreIdx
-                                    ]?.name || "Genre"}
-                            </span>
-                            <AiOutlineCaretDown
-                                className={classNames("w-6 h-6 rounded-md", {
-                                    "hover:bg-white hover:text-orange-400":
-                                        state.genreIdx != -1,
-                                    "hover:bg-orange-400 hover:text-white":
-                                        state.genreIdx == -1,
-                                })}
-                            />
-                            {state.genreDropDown && (
-                                <div
-                                    className="px-4 w-49 border-orange-200 border-t-0 border shadow-md py-4 top-full left-0 right-0 text-orange-400 bg-shade-100 rounded-br-lg absolute max-h-48 overflow-scroll z-50"
-                                    ref={genreRef}
-                                >
-                                    {(state.global
-                                        ? chartList.global
-                                        : chartList.countries[state.countryIdx]
-                                    ).genres.map((g, idx) => (
-                                        <span
-                                            key={g.id}
-                                            className="truncate border-b border-shade-200 py-1 cursor-pointer hover:font-semibold block"
-                                            onClick={() =>
-                                                setState(o => ({
-                                                    ...o,
-                                                    cityIdx: -1,
-                                                    genreIdx: idx,
-                                                }))
-                                            }
-                                        >
-                                            {g.name}
-                                        </span>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
+                            0)) && (
+                    <div
+                        className={classNames(
+                            "px-4 w-36 py-2 rounded-t-md flex justify-between items-center border-b-0 border-2 shadow-lg relative cursor-pointer",
+                            {
+                                "bg-orange-200 text-orange-900 border-orange-400 hover:border-orange-500":
+                                    state.genreIdx != -1,
+                                "bg-white text-orange-400 border-orange-300 hover:border-orange-400":
+                                    state.genreIdx == -1,
+                            }
+                        )}
+                        ref={genreRef}
+                        onClick={toggleGenreDropDown}
+                    >
+                        <span className="font-mono font-semibold truncate">
+                            {state.global
+                                ? chartList.global.genres[state.genreIdx]
+                                      ?.name || "Genre"
+                                : chartList.countries[state.countryIdx]?.genres[
+                                      state.genreIdx
+                                  ]?.name || "Genre"}
+                        </span>
+                        <AiOutlineCaretDown
+                            className={classNames("w-6 h-6 rounded-md", {
+                                "hover:bg-orange-900 hover:text-orange-200":
+                                    state.genreIdx != -1,
+                                "hover:bg-orange-400 hover:text-white":
+                                    state.genreIdx == -1,
+                            })}
+                        />
+                        {state.genreDropDown && (
+                            <div className="px-4 w-36 py-2 rounded-b-md border-t-0 border-2 border-inherit shadow-lg absolute top-full -left-0.5 bg-inherit max-h-48 overflow-scroll z-50 text-inherit">
+                                {(state.global
+                                    ? chartList.global
+                                    : chartList.countries[state.countryIdx]
+                                ).genres.map((g, idx) => (
+                                    <span
+                                        key={g.id}
+                                        className="truncate py-1 cursor-pointer hover:font-semibold block"
+                                        onClick={() =>
+                                            setState(o => ({
+                                                ...o,
+                                                cityIdx: -1,
+                                                genreIdx: idx,
+                                            }))
+                                        }
+                                    >
+                                        {g.name}
+                                    </span>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                )}
             </div>
         </div>
     )
