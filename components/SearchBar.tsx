@@ -1,7 +1,7 @@
 "use client"
 
 import classNames from "classnames"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useRef, useState } from "react"
 import { AiOutlineSearch } from "react-icons/ai"
 import { trpc } from "./TrpcContext"
 import { useRouter } from "next/navigation"
@@ -32,7 +32,7 @@ export const SearchBar = () => {
 
     const onSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log("hello?")
+        setOpen(false)
         const params = new URLSearchParams({ q: value })
         router.push("/search?" + params.toString())
     }
@@ -40,6 +40,13 @@ export const SearchBar = () => {
     const ref = useOnClickOutside<HTMLFormElement>({
         handler: () => setOpen(false),
     })
+    const ipref = useRef<HTMLInputElement>(null)
+
+    const toggle = () =>
+        setOpen(o => {
+            if (!o) ipref.current?.focus()
+            return !o
+        })
 
     return (
         <form
@@ -48,9 +55,7 @@ export const SearchBar = () => {
             ref={ref}
         >
             <AiOutlineSearch
-                onClick={() => {
-                    setOpen(o => !o)
-                }}
+                onClick={toggle}
                 className={classNames(
                     "h-8 w-8 border p-1 border-shade-300 cursor-pointer shadow-md",
                     { "rounded-l-md": open, "rounded-md": !open }
@@ -58,6 +63,7 @@ export const SearchBar = () => {
             />
             <div className="relative h-8">
                 <input
+                    ref={ipref}
                     className={classNames(
                         "w-0 h-full border-shade-300 rounded-tr-md transition-all outline-none shadow-md",
                         {
