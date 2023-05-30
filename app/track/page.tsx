@@ -57,7 +57,7 @@ const TrackPage = async ({
                 }}
             />
             <div className="w-full h-4/5 flex flex-col py-4">
-                <div className="flex flex-row items-center cursor-default z-20">
+                <div className="flex flex-row items-center cursor-default z-20 max-w-[45%]">
                     {audioUrl ? (
                         <AudioPlayer audioUrl={audioUrl} className="text-4xl" />
                     ) : (
@@ -65,12 +65,14 @@ const TrackPage = async ({
                             <AiOutlinePlayCircle className="text-4xl" />
                         </div>
                     )}
-                    <div>
-                        <h2 className="font-semibold text-2xl">
+                    <div className="max-w-full truncate">
+                        <h2 className="font-semibold text-2xl truncate">
                             {track.subtitle}
                         </h2>
-                        <h1 className="text-4xl font-bold">{track.title}</h1>
-                        <h3 className="text-xl font-medium">
+                        <h1 className="text-4xl font-bold max-w-full truncate">
+                            {track.title}
+                        </h1>
+                        <h3 className="text-xl font-medium truncate">
                             {track.genres.primary}
                         </h3>
                     </div>
@@ -115,8 +117,16 @@ const TrackPage = async ({
                     <div className="px-4 w-max basis-1/4 text-center border-l border-shade-300 shrink-0">
                         <h1 className="text-xl font-semibold mb-2">Lyrics</h1>
                         <ul>
-                            {lyrics?.text?.map((t, idx) =>
-                                t ? <li key={idx}>{t}</li> : <br key={idx} />
+                            {lyrics && lyrics.text ? (
+                                lyrics.text.map((t, idx) =>
+                                    t ? (
+                                        <li key={idx}>{t}</li>
+                                    ) : (
+                                        <br key={idx} />
+                                    )
+                                )
+                            ) : (
+                                <li>Not available :(</li>
                             )}
                         </ul>
                     </div>

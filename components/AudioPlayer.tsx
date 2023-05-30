@@ -3,7 +3,6 @@
 import classNames from "classnames"
 import {
     ComponentProps,
-    HTMLAttributes,
     useEffect,
     useRef,
     useState,
