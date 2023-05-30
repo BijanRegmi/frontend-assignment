@@ -92,6 +92,7 @@ export const SearchBar = () => {
                                     q: a.term,
                                 }).toString()}`}
                                 key={idx}
+                                onClick={() => setOpen(false)}
                                 className="truncate border-b border-shade-200 py-2 cursor-pointer hover:border-shade-700 block"
                             >
                                 {a.term}

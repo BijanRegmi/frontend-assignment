@@ -4,6 +4,8 @@ import { ISearchResultResponse } from "@/types/searchResponse"
 import { notFound, redirect } from "next/navigation"
 import { env } from "@/env.mjs"
 
+export const revalidate = false
+
 const SearchPage = async ({
     searchParams,
 }: {
@@ -15,6 +17,7 @@ const SearchPage = async ({
         endpoint: "/search",
         demo: env.DEMO,
         filepath: "responses/search.json",
+        revalidate: false,
         params: {
             term: searchParams.q,
         },

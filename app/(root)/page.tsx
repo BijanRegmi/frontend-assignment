@@ -5,13 +5,15 @@ import { API } from "@/lib/Api"
 import { ChartList } from "@/types/chartList"
 import { notFound } from "next/navigation"
 
-export const revalidate = 14000
+// Incremental static generation
+// with an interval of one day
+export const revalidate = 86400
 
 export default async function Home() {
     const response = await API<ChartList>({
         endpoint: "/charts/list",
         demo: env.DEMO,
-        revalidate: 14000,
+        revalidate: 86400,
         filepath: "responses/charts_list.json",
     })
     if (!response) return notFound()

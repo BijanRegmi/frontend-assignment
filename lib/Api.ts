@@ -5,7 +5,7 @@ import path from "path"
 export const API = async <T>({
     endpoint,
     params = {},
-    revalidate = 0,
+    revalidate = false,
     demo = true,
     filepath = "",
 }: {
@@ -49,6 +49,10 @@ export const API = async <T>({
         console.error(err)
     } finally {
         console.timeEnd(timeId)
-        console.log({ demo, filepath, revalidate, params }, "\n")
+        console.log(
+            `Source: ${demo ? filepath : "API"}\tParams: ${JSON.stringify(
+                params
+            )}`
+        )
     }
 }

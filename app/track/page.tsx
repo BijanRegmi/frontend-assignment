@@ -8,6 +8,8 @@ import { TrackDetails } from "@/types/TrackDetails"
 import { notFound, redirect } from "next/navigation"
 import { AiOutlinePlayCircle } from "react-icons/ai"
 
+export const revalidate = false
+
 const TrackPage = async ({
     searchParams,
 }: {
@@ -18,6 +20,7 @@ const TrackPage = async ({
     const track = await API<TrackDetails>({
         endpoint: "/songs/get-details",
         demo: env.DEMO,
+        revalidate: false,
         filepath: "responses/trackDetails.json",
         params: { key: searchParams.id },
     })
@@ -26,6 +29,7 @@ const TrackPage = async ({
     const summary = await API<{ resources: ArtistSummary }>({
         endpoint: "/artists/get-summary",
         demo: env.DEMO,
+        revalidate: false,
         params: { id: track.artists.pop()?.adamid as string },
         filepath: "responses/artistSummary.json",
     }).then(res => res?.resources)

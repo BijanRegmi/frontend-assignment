@@ -3,9 +3,11 @@ import { env } from "@/env.mjs"
 import { API } from "@/lib/Api"
 import { formatString } from "@/lib/utils"
 import { AlbumDetailResponse } from "@/types/AlbumDetails"
-import classNames from "classnames"
 import Image from "next/image"
 import { notFound, redirect } from "next/navigation"
+
+// Cache the page indefinitely
+export const revalidate = false
 
 const TrackPage = async ({
     searchParams,
@@ -17,6 +19,7 @@ const TrackPage = async ({
     const album = await API<AlbumDetailResponse>({
         endpoint: "/albums/get-details",
         demo: env.DEMO,
+        revalidate: false,
         filepath: "responses/albumDetails.json",
         params: { id: searchParams.id },
     }).then(d => d?.data[0])

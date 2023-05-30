@@ -12,6 +12,7 @@ export const appRouter = router({
             const response = await API<ISearchResponse>({
                 endpoint: "/auto-complete",
                 demo: env.DEMO,
+                revalidate: false,
                 filepath: "responses/autoComplete.json",
                 params: { term: input.term },
             })
@@ -42,6 +43,7 @@ export const appRouter = router({
             }>({
                 endpoint: "/charts/track",
                 params,
+                revalidate: 86400,
                 demo: env.DEMO,
                 filepath: "responses/charts_track.json",
             })
@@ -68,6 +70,7 @@ export const appRouter = router({
             const tracks = await API<ISearchResultResponse>({
                 endpoint: "/search",
                 demo: env.DEMO,
+                revalidate: false,
                 filepath: "responses/search.json",
                 params: {
                     term: input.term,
