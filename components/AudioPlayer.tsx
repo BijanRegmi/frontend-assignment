@@ -38,7 +38,11 @@ export const AudioPlayer = ({
 
     return (
         <>
-            <audio src={audioUrl} className="hidden" ref={ref} />
+            <audio
+                src={audioUrl}
+                className={`hidden ${state.playing ? "playing" : "paused"}`}
+                ref={ref}
+            />
             <div className={classNames("aspect-square h-full p-2", className)}>
                 <div
                     className="relative h-full w-full rounded-full flex items-center justify-center"

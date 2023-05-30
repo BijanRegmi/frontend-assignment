@@ -9,6 +9,7 @@ export interface ITrack {
     title: string
     subtitle: string
     images?: IImages
+    hub: { actions?: { uri?: string }[] }
     artists?: TrackArtist[]
     url: string
 }
